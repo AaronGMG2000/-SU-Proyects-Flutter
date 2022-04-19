@@ -1,6 +1,7 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:tarea_2/bloc/basic_bloc/basic_bloc.dart';
+import 'package:tarea_2/main.dart';
 import 'package:tarea_2/models/login.dart';
 import 'package:tarea_2/pages/page_three/page_three.dart';
 import 'package:tarea_2/pages/page_two/page_two.dart';
@@ -9,8 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tarea_2/widgets/form_validation.dart';
 
 class PageOne extends StatelessWidget {
-  final ValueNotifier<ThemeMode> themeNotifier;
-  const PageOne({Key? key, required this.themeNotifier}) : super(key: key);
+  const PageOne({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
@@ -21,13 +21,14 @@ class PageOne extends StatelessWidget {
           title: const Text('App de ejemplo'),
           actions: [
             IconButton(
-                icon: Icon(themeNotifier.value == ThemeMode.light
+                icon: Icon(Myapp.themeNotifier.value == ThemeMode.light
                     ? Icons.dark_mode
                     : Icons.light_mode),
                 onPressed: () {
-                  themeNotifier.value = themeNotifier.value == ThemeMode.light
-                      ? ThemeMode.dark
-                      : ThemeMode.light;
+                  Myapp.themeNotifier.value =
+                      Myapp.themeNotifier.value == ThemeMode.light
+                          ? ThemeMode.dark
+                          : ThemeMode.light;
                 })
           ],
         ),

@@ -1,11 +1,12 @@
 import 'dart:async';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:tarea_2/pages/page_one/page_one.dart';
 import 'package:flutter/material.dart';
+import 'package:tarea_2/util/realTimeDatabase.dart';
 
 void main() {
   runZonedGuarded(
@@ -31,6 +32,7 @@ class _MyappState extends State<Myapp> {
     await _initializeC();
     await _initializeRC();
     await _initializeCM();
+    await _initializeRB();
   }
 
   Future<void> _initializeC() async {
@@ -68,6 +70,28 @@ class _MyappState extends State<Myapp> {
     FirebaseMessaging.onMessage.listen((event) {
       print(event.notification!.title);
       print(event.notification!.body);
+    });
+  }
+
+  Future<void> _initializeRB() async {
+    final database = FirebaseDatabase.instance.ref();
+    String? macAddress = await getDeviceIdentifier();
+    final mode = database.child('$macAddress/mode');
+    final rememberMe = database.child('$macAddress/rememberMe');
+    final email = database.child('$macAddress/email');
+    await mode.get().then((value) {
+      if (value.value == null) {
+        mode.set(false);
+        rememberMe.set(false);
+        email.set("");
+      } else {
+        Myapp.themeNotifier.value =
+            value.value as bool ? ThemeMode.dark : ThemeMode.light;
+      }
+    });
+    database.child('$macAddress/mode').onValue.listen((event) {
+      Myapp.themeNotifier.value =
+          event.snapshot.value as bool ? ThemeMode.dark : ThemeMode.light;
     });
   }
 
