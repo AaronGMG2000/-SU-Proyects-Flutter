@@ -1,9 +1,6 @@
 import 'dart:convert';
-import 'dart:ffi';
-
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/src/foundation/assertions.dart';
 import 'package:tarea_2/provider/firestore_database_functions.dart';
 import 'package:tarea_2/util/app_type.dart';
 import 'package:http/http.dart' as http;
