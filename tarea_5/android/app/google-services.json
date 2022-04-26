@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "195300122202",
+    "project_id": "universales-98a5a",
+    "storage_bucket": "universales-98a5a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:195300122202:android:fd583b6e8b3ba3917b0263",
+        "android_client_info": {
+          "package_name": "com.example.tarea_2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "195300122202-n4s322i2g24q54sr4v6n15bqc899bece.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tarea_2",
+            "certificate_hash": "4fd34ab1091859cd4a8f5c7be161c9113780b51b"
+          }
+        },
+        {
+          "client_id": "195300122202-iisa4nltbak4s3gjo8h1rp0p3lpa8hhj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3XSBCkS-JJo8fWaNW-uIEo6bosJSinRE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "195300122202-iisa4nltbak4s3gjo8h1rp0p3lpa8hhj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

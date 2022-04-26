@@ -13,7 +13,7 @@ import 'package:tarea_2/util/app_type.dart';
 
 Future<void> initData() async {
   dynamic dataLogin = await ApiManager.shared.request(
-    baseUrl: "192.168.1.8:8585",
+    baseUrl: "192.168.1.13:8585",
     pathUrl: "/user/buscar",
     type: HttpType.get,
   );
@@ -24,7 +24,7 @@ Future<void> initData() async {
   await LoginRepository.shared.save(data: loginDB, table: 'login');
 
   dynamic dataClient = await ApiManager.shared.request(
-    baseUrl: "192.168.1.8:8585",
+    baseUrl: "192.168.1.13:8585",
     pathUrl: "/cliente/buscar",
     type: HttpType.get,
   );
@@ -33,7 +33,7 @@ Future<void> initData() async {
   }).toList();
   await ClienteRepository.shared.save(data: clientesDB, table: 'cliente');
   dynamic dataSeguro = await ApiManager.shared.request(
-    baseUrl: "192.168.1.8:8585",
+    baseUrl: "192.168.1.13:8585",
     pathUrl: "/seguro/buscar",
     type: HttpType.get,
   );
@@ -43,7 +43,7 @@ Future<void> initData() async {
   await SeguroRepository.shared.save(data: segurosDB, table: 'seguro');
 
   dynamic dataPerito = await ApiManager.shared.request(
-    baseUrl: "192.168.1.8:8585",
+    baseUrl: "192.168.1.13:8585",
     pathUrl: "/perito/buscar",
     type: HttpType.get,
   );
@@ -53,7 +53,7 @@ Future<void> initData() async {
   await PeritoRepository.shared.save(data: peritosDB, table: 'perito');
 
   dynamic dataSiniestro = await ApiManager.shared.request(
-    baseUrl: "192.168.1.8:8585",
+    baseUrl: "192.168.1.13:8585",
     pathUrl: "/siniestro/buscar",
     type: HttpType.get,
   );

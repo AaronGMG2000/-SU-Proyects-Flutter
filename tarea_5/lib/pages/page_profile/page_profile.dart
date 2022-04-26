@@ -8,7 +8,9 @@ import 'package:tarea_2/pages/page_editable_table/page_editable_table.dart';
 import 'package:tarea_2/pages/page_one/page_one.dart';
 import 'package:tarea_2/pages/page_seguro/page_seguro.dart';
 import 'package:tarea_2/pages/page_siniestro/page_siniestro.dart';
+import 'package:tarea_2/provider/api_manager.dart';
 import 'package:tarea_2/provider/get_user.dart';
+import 'package:tarea_2/util/app_type.dart';
 import 'package:tarea_2/util/realTimeDatabase.dart';
 import 'package:tarea_2/widgets/button_model2.dart';
 
