@@ -6,12 +6,17 @@ import 'package:tarea_2/pages/page_two/page_two.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tarea_2/provider/api_manager.dart';
+import 'package:tarea_2/repository/login_repository.dart';
 import 'package:tarea_2/util/app_type.dart';
 import 'package:tarea_2/util/realTimeDatabase.dart';
 import 'package:tarea_2/widgets/form_validation.dart';
 
 class PageOne extends StatefulWidget {
-  const PageOne({Key? key}) : super(key: key);
+  final Login login;
+  const PageOne({
+    Key? key,
+    required this.login,
+  }) : super(key: key);
 
   @override
   _PageOneState createState() => _PageOneState();
@@ -19,7 +24,6 @@ class PageOne extends StatefulWidget {
 
 class _PageOneState extends State<PageOne> {
   final _formKey = GlobalKey<FormState>();
-  final login = Login();
 
   Future<void> _initializeLogin() async {
     dynamic isLogin = await getMode("rememberMe");
@@ -34,11 +38,11 @@ class _PageOneState extends State<PageOne> {
         },
       );
       if (data != null) {
-        Login login = Login.fromService(data);
+        Login loginU = Login.fromService(data);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => PageProfile(email: login.email),
+            builder: (context) => PageProfile(email: loginU.email),
           ),
         );
       }
@@ -91,13 +95,8 @@ class _PageOneState extends State<PageOne> {
                       break;
                     case LoginSuccess:
                       final estado = state as LoginSuccess;
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              PageProfile(email: estado.email),
-                        ),
-                      );
+                      widget.login.email = estado.email;
+                      Myapp.isLogin.value = true;
                       break;
                     case EmailFail:
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -115,123 +114,156 @@ class _PageOneState extends State<PageOne> {
                 },
                 child: BlocBuilder<BasicBloc, BasicState>(
                   builder: (context, state) {
-                    return Stack(
-                      children: [
-                        Column(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(top: 110, left: 50),
-                              child: const Text(
-                                "Bienvenido de nuevo",
-                                style: TextStyle(
-                                  fontSize: 26,
-                                  color: Colors.white,
-                                  fontFamily: "SegoeUI",
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              alignment: Alignment.centerLeft,
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(top: 20, left: 50),
-                              child: const Text(
-                                "¡te extrañamos! Inicie sesión para comenzar",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.white,
-                                  fontFamily: "SegoeUI",
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              alignment: Alignment.centerLeft,
-                            ),
-                          ],
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 250),
-                          decoration: BoxDecoration(
-                            color: Myapp.themeNotifier.value == ThemeMode.light
-                                ? Colors.white
-                                : const Color.fromRGBO(29, 29, 29, 1),
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(50),
-                              topRight: Radius.circular(50),
-                            ),
-                          ),
-                          child: ListView(
-                            scrollDirection: Axis.vertical,
-                            children: [
-                              Column(
+                    return FutureBuilder(
+                      future: LoginRepository.shared.getAllSave(),
+                      builder: (BuildContext context, snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.none:
+                            return const Text('Press button to start.');
+                          case ConnectionState.active:
+                          case ConnectionState.waiting:
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          case ConnectionState.done:
+                            if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            }
+                            if (snapshot.hasData) {
+                              return Stack(
                                 children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                      top: 20,
-                                      left: 30,
-                                    ),
-                                    alignment: Alignment.centerLeft,
-                                    child: const Text(
-                                      "LOGIN",
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontFamily: "SegoeUI",
-                                        fontWeight: FontWeight.bold,
+                                  Column(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.only(
+                                            top: 110, left: 50),
+                                        child: const Text(
+                                          "Bienvenido de nuevo",
+                                          style: TextStyle(
+                                            fontSize: 26,
+                                            color: Colors.white,
+                                            fontFamily: "SegoeUI",
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        alignment: Alignment.centerLeft,
                                       ),
-                                    ),
+                                      Container(
+                                        margin: const EdgeInsets.only(
+                                            top: 20, left: 50),
+                                        child: const Text(
+                                          "¡te extrañamos! Inicie sesión para comenzar",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.white,
+                                            fontFamily: "SegoeUI",
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        alignment: Alignment.centerLeft,
+                                      ),
+                                    ],
                                   ),
                                   Container(
-                                    margin: const EdgeInsets.only(
-                                      top: 30,
-                                    ),
-                                    child: FormValidation(
-                                      login: login,
-                                      formKey: _formKey,
-                                      onSubmit: () {
-                                        if (_formKey.currentState!.validate()) {
-                                          _formKey.currentState?.save();
-                                          BlocProvider.of<BasicBloc>(context)
-                                              .add(
-                                            LoginStart(
-                                                email: login.email,
-                                                password: login.password,
-                                                rememberMe: login.rememberMe),
-                                          );
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                  Container(
-                                      margin: const EdgeInsets.only(
-                                        top: 100,
+                                    margin: const EdgeInsets.only(top: 250),
+                                    decoration: BoxDecoration(
+                                      color: Myapp.themeNotifier.value ==
+                                              ThemeMode.light
+                                          ? Colors.white
+                                          : const Color.fromRGBO(29, 29, 29, 1),
+                                      borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(50),
+                                        topRight: Radius.circular(50),
                                       ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: const [
-                                          Text(
-                                            "¿No tienes cuenta?",
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              fontFamily: "SegoeUI",
-                                              fontWeight: FontWeight.bold,
+                                    ),
+                                    child: ListView(
+                                      scrollDirection: Axis.vertical,
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Container(
+                                              margin: const EdgeInsets.only(
+                                                top: 20,
+                                                left: 30,
+                                              ),
+                                              alignment: Alignment.centerLeft,
+                                              child: const Text(
+                                                "LOGIN",
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontFamily: "SegoeUI",
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                          Text(
-                                            " Registrate",
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              fontFamily: "SegoeUI",
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.blue,
+                                            Container(
+                                              margin: const EdgeInsets.only(
+                                                top: 30,
+                                              ),
+                                              child: FormValidation(
+                                                login: widget.login,
+                                                formKey: _formKey,
+                                                onSubmit: () {
+                                                  if (_formKey.currentState!
+                                                      .validate()) {
+                                                    _formKey.currentState
+                                                        ?.save();
+                                                    BlocProvider.of<BasicBloc>(
+                                                            context)
+                                                        .add(
+                                                      LoginStart(
+                                                          email: widget
+                                                              .login.email,
+                                                          password: widget
+                                                              .login.password,
+                                                          rememberMe: widget
+                                                              .login
+                                                              .rememberMe),
+                                                    );
+                                                  }
+                                                },
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      )),
+                                            Container(
+                                                margin: const EdgeInsets.only(
+                                                  top: 100,
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: const [
+                                                    Text(
+                                                      "¿No tienes cuenta?",
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                        fontFamily: "SegoeUI",
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      " Registrate",
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                        fontFamily: "SegoeUI",
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.blue,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  )
                                 ],
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
+                              );
+                            }
+                            return const Text('No data');
+                        }
+                      },
                     );
                   },
                 ),

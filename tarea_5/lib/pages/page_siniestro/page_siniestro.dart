@@ -1,6 +1,8 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tarea_2/bloc/siniestro_bloc/siniestro_bloc.dart';
+import 'package:tarea_2/main.dart';
 import 'package:tarea_2/models/siniestro.dart';
 import 'package:tarea_2/pages/page_register_siniestro/page_register_siniestro.dart';
 import 'package:tarea_2/repository/siniestro_repository.dart';
@@ -94,83 +96,117 @@ class _PageSiniestroState extends State<PageSiniestro> {
               );
             }
 
-            return Scaffold(
-              drawer: const NavigationDrawerWidget(),
-              appBar: AppBar(
-                title: const Text("Siniestros"),
-                backgroundColor: Colors.red,
-              ),
-              floatingActionButton: FloatingActionButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return PageRegisterSiniestro(
-                        formKey: _formKey,
-                        onSubmit: create,
-                        siniestro: siniestro,
-                        titulo: 'Registrar Siniestro',
-                      );
-                    }));
-                  },
-                  child: const Icon(
-                    Icons.add,
-                  )),
-              body: FutureBuilder(
-                future: SiniestroRepository.shared.getAll(table: 'siniestro'),
-                builder: (BuildContext context, snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.none:
-                      return const Text('Press button to start.');
-                    case ConnectionState.active:
-                    case ConnectionState.waiting:
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    case ConnectionState.done:
-                      if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      }
-                      if (snapshot.hasData) {
-                        List<dynamic> data =
-                            snapshot.requireData as List<dynamic>;
-                        siniestros =
-                            data.map((e) => Siniestro.fromLocal(e)).toList();
-                        return ListView.builder(
-                          itemCount: siniestros.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              onLongPress: () {
-                                delete(siniestros[index].idSiniestro, index);
-                              },
-                              title: Text(
-                                  '${siniestros[index].fechaSiniestro.toIso8601String().split("T")[0]} - ${siniestros[index].causas}'),
-                              subtitle: Text(
-                                  "ID: ${siniestros[index].idSiniestro.toString()} Estado: ${siniestros[index].aceptado}"),
-                              leading: const Icon(
-                                Icons.assignment_late_outlined,
-                              ),
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => PageRegisterSiniestro(
-                                      formKey: _formKey,
-                                      onSubmit: update,
-                                      update: true,
-                                      siniestro: siniestros[index],
-                                      titulo: 'Editar Siniestro',
-                                    ),
+            return ValueListenableBuilder<bool>(
+              valueListenable: Myapp.connected,
+              builder: (_, bool conect, __) {
+                return Scaffold(
+                  drawer: const NavigationDrawerWidget(),
+                  appBar: AppBar(
+                    title: const Text("Siniestros"),
+                    backgroundColor: Colors.red,
+                  ),
+                  floatingActionButton: FloatingActionButton(
+                      onPressed: () {
+                        if (Myapp.connected.value) {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return PageRegisterSiniestro(
+                              formKey: _formKey,
+                              onSubmit: create,
+                              siniestro: siniestro,
+                              titulo: 'Registrar Siniestro',
+                            );
+                          }));
+                        } else {
+                          Flushbar(
+                            message: 'No hay conexion a internet',
+                            backgroundColor: Colors.red,
+                            duration: const Duration(milliseconds: 1500),
+                          ).show(context);
+                        }
+                      },
+                      child: const Icon(
+                        Icons.add,
+                      )),
+                  body: FutureBuilder(
+                    future: SiniestroRepository.shared.getAllSave(),
+                    builder: (BuildContext context, snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.none:
+                          return const Text('Press button to start.');
+                        case ConnectionState.active:
+                        case ConnectionState.waiting:
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        case ConnectionState.done:
+                          if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          }
+                          if (snapshot.hasData) {
+                            List<dynamic> data =
+                                snapshot.requireData as List<dynamic>;
+                            siniestros = data
+                                .map((e) => Siniestro.fromLocal(e))
+                                .toList();
+                            return ListView.builder(
+                              itemCount: siniestros.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  onLongPress: () {
+                                    if (Myapp.connected.value) {
+                                      delete(
+                                          siniestros[index].idSiniestro, index);
+                                    } else {
+                                      Flushbar(
+                                        message: 'No hay conexion a internet',
+                                        backgroundColor: Colors.red,
+                                        duration:
+                                            const Duration(milliseconds: 1500),
+                                      ).show(context);
+                                    }
+                                  },
+                                  title: Text(
+                                      '${siniestros[index].fechaSiniestro.toIso8601String().split("T")[0]} - ${siniestros[index].causas}'),
+                                  subtitle: Text(
+                                      "ID: ${siniestros[index].idSiniestro.toString()} Estado: ${siniestros[index].aceptado}"),
+                                  leading: const Icon(
+                                    Icons.assignment_late_outlined,
                                   ),
+                                  onTap: () {
+                                    if (Myapp.connected.value) {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              PageRegisterSiniestro(
+                                            formKey: _formKey,
+                                            onSubmit: update,
+                                            update: true,
+                                            siniestro: siniestros[index],
+                                            titulo: 'Editar Siniestro',
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      Flushbar(
+                                        message: 'No hay conexion a internet',
+                                        backgroundColor: Colors.red,
+                                        duration:
+                                            const Duration(milliseconds: 1500),
+                                      ).show(context);
+                                    }
+                                  },
+                                  trailing: const Icon(Icons.arrow_forward_ios),
                                 );
                               },
-                              trailing: const Icon(Icons.arrow_forward_ios),
                             );
-                          },
-                        );
+                          }
+                          return const Text('No data');
                       }
-                      return const Text('No data');
-                  }
-                },
-              ),
+                    },
+                  ),
+                );
+              },
             );
           },
         ),

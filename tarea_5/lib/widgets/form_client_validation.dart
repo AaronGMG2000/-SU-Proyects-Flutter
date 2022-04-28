@@ -57,6 +57,7 @@ class _FormClientValidation extends State<FormClientValidation> {
               Navigator.pop(context);
               break;
             case ClientFailure:
+              widget.showSpinner(false);
               final estado = state as ClientFailure;
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(estado.message)),

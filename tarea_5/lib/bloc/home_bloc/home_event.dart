@@ -10,3 +10,8 @@ class SelectPage extends HomeEvent {
   @override
   List<Object?> get props => [page];
 }
+
+class CloseSession extends HomeEvent {
+  @override
+  List<Object?> get props => [];
+}

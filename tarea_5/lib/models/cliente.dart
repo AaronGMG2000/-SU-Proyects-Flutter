@@ -40,6 +40,7 @@ class Cliente {
   }
 
   Map<String, dynamic> toDatabase() => {
+        'dniCl': dniCl,
         'nombreCl': nombreCl,
         'apellido1': apellido1,
         'apellido2': apellido2,

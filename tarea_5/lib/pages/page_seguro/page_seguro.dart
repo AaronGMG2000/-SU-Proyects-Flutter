@@ -1,6 +1,8 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tarea_2/bloc/seguro_bloc/seguro_bloc.dart';
+import 'package:tarea_2/main.dart';
 import 'package:tarea_2/models/Seguro.dart';
 import 'package:tarea_2/pages/page_register_seguro/page_register_seguro.dart';
 import 'package:tarea_2/repository/seguro_repository.dart';
@@ -96,83 +98,116 @@ class _PageSeguroState extends State<PageSeguro> {
               );
             }
 
-            return Scaffold(
-              drawer: const NavigationDrawerWidget(),
-              appBar: AppBar(
-                title: const Text("Seguros"),
-                backgroundColor: Colors.red,
-              ),
-              floatingActionButton: FloatingActionButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return PageRegisterSeguro(
-                        formKey: _formKey,
-                        onSubmit: create,
-                        titulo: 'Registrar Seguro',
-                        seguro: seguro,
-                      );
-                    }));
-                  },
-                  child: const Icon(
-                    Icons.add,
-                  )),
-              body: FutureBuilder(
-                future: SeguroRepository.shared.getAll(table: 'seguro'),
-                builder: (BuildContext context, snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.none:
-                      return const Text('Press button to start.');
-                    case ConnectionState.active:
-                    case ConnectionState.waiting:
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    case ConnectionState.done:
-                      if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      }
-                      if (snapshot.hasData) {
-                        List<dynamic> data =
-                            snapshot.requireData as List<dynamic>;
-                        seguros =
-                            data.map((e) => Seguro.fromService(e)).toList();
-                        return ListView.builder(
-                          itemCount: seguros.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              onLongPress: () {
-                                delete(seguros[index].numeroPoliza, index);
-                              },
-                              title: Text(
-                                  'Inicio: ${seguros[index].fechaInicio.toIso8601String().split("T")[0]} - Vencimiento: ${seguros[index].fechaVencimiento.toIso8601String().split("T")[0]}'),
-                              subtitle: Text(
-                                  "Poliza: ${seguros[index].numeroPoliza.toString()}"),
-                              leading: const Icon(
-                                Icons.security,
-                              ),
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => PageRegisterSeguro(
-                                      formKey: _formKey,
-                                      titulo: "Editar Seguro",
-                                      onSubmit: update,
-                                      update: true,
-                                      seguro: seguros[index],
-                                    ),
+            return ValueListenableBuilder<bool>(
+              valueListenable: Myapp.connected,
+              builder: (_, bool conect, __) {
+                return Scaffold(
+                  drawer: const NavigationDrawerWidget(),
+                  appBar: AppBar(
+                    title: const Text("Seguros"),
+                    backgroundColor: Colors.red,
+                  ),
+                  floatingActionButton: FloatingActionButton(
+                      onPressed: () {
+                        if (Myapp.connected.value) {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return PageRegisterSeguro(
+                              formKey: _formKey,
+                              onSubmit: create,
+                              titulo: 'Registrar Seguro',
+                              seguro: seguro,
+                            );
+                          }));
+                        } else {
+                          Flushbar(
+                            message: 'No hay conexion a internet',
+                            backgroundColor: Colors.red,
+                            duration: const Duration(milliseconds: 1500),
+                          ).show(context);
+                        }
+                      },
+                      child: const Icon(
+                        Icons.add,
+                      )),
+                  body: FutureBuilder(
+                    future: SeguroRepository.shared.getAllSave(),
+                    builder: (BuildContext context, snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.none:
+                          return const Text('Press button to start.');
+                        case ConnectionState.active:
+                        case ConnectionState.waiting:
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        case ConnectionState.done:
+                          if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          }
+                          if (snapshot.hasData) {
+                            List<dynamic> data =
+                                snapshot.requireData as List<dynamic>;
+                            seguros =
+                                data.map((e) => Seguro.fromService(e)).toList();
+                            return ListView.builder(
+                              itemCount: seguros.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  onLongPress: () {
+                                    if (Myapp.connected.value) {
+                                      delete(
+                                          seguros[index].numeroPoliza, index);
+                                    } else {
+                                      Flushbar(
+                                        message: 'No hay conexion a internet',
+                                        backgroundColor: Colors.red,
+                                        duration:
+                                            const Duration(milliseconds: 1500),
+                                      ).show(context);
+                                    }
+                                  },
+                                  title: Text(
+                                      'Inicio: ${seguros[index].fechaInicio.toIso8601String().split("T")[0]} - Vencimiento: ${seguros[index].fechaVencimiento.toIso8601String().split("T")[0]}'),
+                                  subtitle: Text(
+                                      "Poliza: ${seguros[index].numeroPoliza.toString()}"),
+                                  leading: const Icon(
+                                    Icons.security,
                                   ),
+                                  onTap: () {
+                                    if (Myapp.connected.value) {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              PageRegisterSeguro(
+                                            formKey: _formKey,
+                                            titulo: "Editar Seguro",
+                                            onSubmit: update,
+                                            update: true,
+                                            seguro: seguros[index],
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      Flushbar(
+                                        message: 'No hay conexion a internet',
+                                        backgroundColor: Colors.red,
+                                        duration:
+                                            const Duration(milliseconds: 1500),
+                                      ).show(context);
+                                    }
+                                  },
+                                  trailing: const Icon(Icons.arrow_forward_ios),
                                 );
                               },
-                              trailing: const Icon(Icons.arrow_forward_ios),
                             );
-                          },
-                        );
+                          }
+                          return const Text('No data');
                       }
-                      return const Text('No data');
-                  }
-                },
-              ),
+                    },
+                  ),
+                );
+              },
             );
           },
         ),

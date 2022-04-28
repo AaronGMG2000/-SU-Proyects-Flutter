@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tarea_2/models/login.dart';
 import 'package:tarea_2/provider/api_manager.dart';
@@ -21,6 +22,10 @@ class BasicBloc extends Bloc<BasicEvent, BasicState> {
         where: 'email = ?',
         whereArgs: [event.email],
       );
+      if (login.length == 0) {
+        emit(EmailFail());
+        return;
+      }
       dynamic data = login.first;
       if (data != null) {
         Login login = Login.fromService(data);
@@ -30,6 +35,10 @@ class BasicBloc extends Bloc<BasicEvent, BasicState> {
           }
           setMode(login.email, 'email');
           setMode(login.name, 'name');
+          final SharedPreferences sharedPreferences =
+              await SharedPreferences.getInstance();
+          sharedPreferences.setString('email', login.email);
+          sharedPreferences.setString('name', login.name);
           emit(
             LoginSuccess(
               email: login.email,

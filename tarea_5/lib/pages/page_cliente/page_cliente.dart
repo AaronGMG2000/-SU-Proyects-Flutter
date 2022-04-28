@@ -1,6 +1,8 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tarea_2/bloc/cliente_bloc/cliente_bloc.dart';
+import 'package:tarea_2/main.dart';
 import 'package:tarea_2/models/cliente.dart';
 import 'package:tarea_2/pages/page_register_client/page_register_client.dart';
 import 'package:tarea_2/repository/cliente_repository.dart';
@@ -95,83 +97,118 @@ class _PageClienteState extends State<PageCliente> {
               );
             }
 
-            return Scaffold(
-              drawer: const NavigationDrawerWidget(),
-              appBar: AppBar(
-                title: const Text("Clientes"),
-                backgroundColor: Colors.red,
-              ),
-              floatingActionButton: FloatingActionButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return PageRegisterClient(
-                        formKey: _formKey,
-                        titulo: 'Registrar Cliente',
-                        onSubmit: create,
-                        cliente: cliente,
-                      );
-                    }));
-                  },
-                  child: const Icon(
-                    Icons.add,
-                  )),
-              body: FutureBuilder(
-                future: ClienteRepository.shared.getAll(table: 'cliente'),
-                builder: (BuildContext context, snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.none:
-                      return const Text('Press button to start.');
-                    case ConnectionState.active:
-                    case ConnectionState.waiting:
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    case ConnectionState.done:
-                      if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      }
-                      if (snapshot.hasData) {
-                        List<dynamic> data =
-                            snapshot.requireData as List<dynamic>;
-                        clientes =
-                            data.map((e) => Cliente.fromService(e)).toList();
-                        return ListView.builder(
-                          itemCount: clientes.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              onLongPress: () {
-                                delete(clientes[index].dniCl, index);
-                              },
-                              title: Text(
-                                  '${clientes[index].nombreCl} ${clientes[index].apellido1} ${clientes[index].apellido2}'),
-                              subtitle: Text(
-                                  "DNI: ${clientes[index].dniCl.toString()} Tel: ${clientes[index].telefono}"),
-                              leading: const Icon(
-                                Icons.person,
-                              ),
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => PageRegisterClient(
-                                      formKey: _formKey,
-                                      onSubmit: update,
-                                      update: true,
-                                      titulo: 'Cliente',
-                                      cliente: clientes[index],
-                                    ),
+            return ValueListenableBuilder<bool>(
+              valueListenable: Myapp.connected,
+              builder: (_, bool conect, __) {
+                return Scaffold(
+                  drawer: const NavigationDrawerWidget(),
+                  appBar: AppBar(
+                    title: Text(Myapp.connected.value
+                        ? "Clientes"
+                        : "Clientes (Sin Conexion)"),
+                    backgroundColor: Colors.red,
+                  ),
+                  floatingActionButton: FloatingActionButton(
+                      onPressed: () {
+                        if (Myapp.connected.value) {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return PageRegisterClient(
+                              formKey: _formKey,
+                              titulo: 'Registrar Cliente',
+                              onSubmit: create,
+                              cliente: cliente,
+                            );
+                          }));
+                        } else {
+                          Flushbar(
+                            message: 'No hay conexion a internet',
+                            backgroundColor: Colors.red,
+                            duration: const Duration(milliseconds: 1500),
+                          ).show(context);
+                        }
+                      },
+                      child: const Icon(
+                        Icons.add,
+                      )),
+                  body: FutureBuilder(
+                    future: ClienteRepository.shared.getAllSave(),
+                    builder: (BuildContext context, snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.none:
+                          return const Text('Press button to start.');
+                        case ConnectionState.active:
+                        case ConnectionState.waiting:
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        case ConnectionState.done:
+                          if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          }
+                          if (snapshot.hasData) {
+                            List<dynamic> data =
+                                snapshot.requireData as List<dynamic>;
+                            clientes = data
+                                .map((e) => Cliente.fromService(e))
+                                .toList();
+                            return ListView.builder(
+                              itemCount: clientes.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  onLongPress: () {
+                                    if (Myapp.connected.value) {
+                                      delete(clientes[index].dniCl, index);
+                                    } else {
+                                      Flushbar(
+                                        message: 'No hay conexion a internet',
+                                        backgroundColor: Colors.red,
+                                        duration:
+                                            const Duration(milliseconds: 1500),
+                                      ).show(context);
+                                    }
+                                  },
+                                  title: Text(
+                                      '${clientes[index].nombreCl} ${clientes[index].apellido1} ${clientes[index].apellido2}'),
+                                  subtitle: Text(
+                                      "DNI: ${clientes[index].dniCl.toString()} Tel: ${clientes[index].telefono}"),
+                                  leading: const Icon(
+                                    Icons.person,
                                   ),
+                                  onTap: () {
+                                    if (Myapp.connected.value) {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              PageRegisterClient(
+                                            formKey: _formKey,
+                                            onSubmit: update,
+                                            update: true,
+                                            titulo: 'Cliente',
+                                            cliente: clientes[index],
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      Flushbar(
+                                        message: 'No hay conexion a internet',
+                                        backgroundColor: Colors.red,
+                                        duration:
+                                            const Duration(milliseconds: 1500),
+                                      ).show(context);
+                                    }
+                                  },
+                                  trailing: const Icon(Icons.arrow_forward_ios),
                                 );
                               },
-                              trailing: const Icon(Icons.arrow_forward_ios),
                             );
-                          },
-                        );
+                          }
+                          return const Text('No data');
                       }
-                      return const Text('No data');
-                  }
-                },
-              ),
+                    },
+                  ),
+                );
+              },
             );
           },
         ),

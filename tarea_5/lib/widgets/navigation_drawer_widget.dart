@@ -4,8 +4,6 @@ import 'package:tarea_2/main.dart';
 import 'package:tarea_2/models/login.dart';
 import 'package:tarea_2/pages/page_cliente/page_cliente.dart';
 import 'package:tarea_2/pages/page_editable_table/page_editable_table.dart';
-import 'package:tarea_2/pages/page_one/page_one.dart';
-import 'package:tarea_2/pages/page_profile/page_profile.dart';
 import 'package:tarea_2/pages/page_seguro/page_seguro.dart';
 import 'package:tarea_2/pages/page_siniestro/page_siniestro.dart';
 import 'package:tarea_2/provider/get_user.dart';
@@ -61,14 +59,8 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                               text: "Perfil",
                               icon: Icons.person,
                               onTap: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => PageProfile(
-                                      email: login.email,
-                                    ),
-                                  ),
-                                );
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop();
                               },
                             ),
                             const SizedBox(height: 16),
@@ -154,12 +146,7 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                                 setMode(false, 'rememberMe');
                                 setMode("", 'email');
                                 setMode("", 'name');
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const PageOne(),
-                                  ),
-                                );
+                                Myapp.isLogin.value = false;
                               },
                             ),
                           ],

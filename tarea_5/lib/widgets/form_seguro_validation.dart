@@ -59,6 +59,7 @@ class _FormSeguroValidation extends State<FormSeguroValidation> {
               break;
             case EventFailure:
               final estado = state as EventFailure;
+              widget.showSpinner(false);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(estado.message)),
               );

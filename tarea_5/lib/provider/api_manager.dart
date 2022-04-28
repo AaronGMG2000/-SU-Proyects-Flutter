@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:tarea_2/main.dart';
 import 'package:tarea_2/provider/firestore_database_functions.dart';
 import 'package:tarea_2/util/app_type.dart';
 import 'package:http/http.dart' as http;
@@ -52,6 +53,9 @@ class ApiManager {
         return true;
       }
     } else {
+      if (response.statusCode == 403) {
+        Myapp.isLogin.value = false;
+      }
       if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled) {
         FirebaseCrashlytics.instance.log(
             "Error: ${baseUrl + pathUrl} - ${response.statusCode.toString()} - ${response.reasonPhrase}");

@@ -5,12 +5,9 @@ import 'package:tarea_2/main.dart';
 import 'package:tarea_2/models/login.dart';
 import 'package:tarea_2/pages/page_cliente/page_cliente.dart';
 import 'package:tarea_2/pages/page_editable_table/page_editable_table.dart';
-import 'package:tarea_2/pages/page_one/page_one.dart';
 import 'package:tarea_2/pages/page_seguro/page_seguro.dart';
 import 'package:tarea_2/pages/page_siniestro/page_siniestro.dart';
-import 'package:tarea_2/provider/api_manager.dart';
 import 'package:tarea_2/provider/get_user.dart';
-import 'package:tarea_2/util/app_type.dart';
 import 'package:tarea_2/util/realTimeDatabase.dart';
 import 'package:tarea_2/widgets/button_model2.dart';
 
@@ -66,7 +63,7 @@ class PageProfile extends StatelessWidget {
                               case AppStarted:
                                 break;
                               case ClienteState:
-                                Navigator.pushReplacement(
+                                Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => const PageCliente(),
@@ -74,7 +71,7 @@ class PageProfile extends StatelessWidget {
                                 );
                                 break;
                               case SeguroState:
-                                Navigator.pushReplacement(
+                                Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => const PageSeguro(),
@@ -82,7 +79,7 @@ class PageProfile extends StatelessWidget {
                                 );
                                 break;
                               case SiniestroState:
-                                Navigator.pushReplacement(
+                                Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => const PageSiniestro(),
@@ -257,8 +254,7 @@ class PageProfile extends StatelessWidget {
                                                 iconButton: Icons
                                                     .assignment_late_outlined,
                                                 onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pushReplacement(
+                                                  Navigator.of(context).push(
                                                     MaterialPageRoute(
                                                       builder: (context) =>
                                                           const PageEditableTable(),
@@ -287,13 +283,30 @@ class PageProfile extends StatelessWidget {
                                                   setMode(false, 'rememberMe');
                                                   setMode("", 'email');
                                                   setMode("", 'name');
-                                                  Navigator.of(context)
-                                                      .pushReplacement(
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          const PageOne(),
-                                                    ),
-                                                  );
+                                                  Myapp.isLogin.value = false;
+                                                },
+                                                width: 350,
+                                                height: 75,
+                                                lightColor:
+                                                    const Color.fromARGB(
+                                                        255, 223, 224, 228),
+                                                darkColor: const Color.fromRGBO(
+                                                    56, 56, 56, 1),
+                                                lightText: Colors.black87,
+                                              ),
+                                            ),
+                                            Container(
+                                              margin: const EdgeInsets.only(
+                                                top: 20,
+                                              ),
+                                              child: ButtonModel2(
+                                                text: "Forzar Cierre de Sesión",
+                                                iconButton: Icons.logout,
+                                                isIcon: false,
+                                                onPressed: () {
+                                                  BlocProvider.of<HomeBloc>(
+                                                          context)
+                                                      .add(CloseSession());
                                                 },
                                                 width: 350,
                                                 height: 75,

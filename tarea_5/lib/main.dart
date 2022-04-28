@@ -4,10 +4,12 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:tarea_2/models/login.dart';
 import 'package:tarea_2/pages/page_one/page_one.dart';
 import 'package:flutter/material.dart';
-import 'package:tarea_2/util/db.dart';
+import 'package:tarea_2/pages/page_profile/page_profile.dart';
 import 'package:tarea_2/util/realTimeDatabase.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 
 void main() {
   runZonedGuarded(
@@ -24,6 +26,8 @@ class Myapp extends StatefulWidget {
 
   static final ValueNotifier<ThemeMode> themeNotifier =
       ValueNotifier(ThemeMode.system);
+  static late ValueNotifier<bool> isLogin = ValueNotifier(false);
+  static late ValueNotifier<bool> connected = ValueNotifier(false);
 }
 
 class _MyappState extends State<Myapp> {
@@ -34,7 +38,6 @@ class _MyappState extends State<Myapp> {
     await _initializeRC();
     await _initializeCM();
     await _initializeRB();
-    await initData();
   }
 
   Future<void> _initializeC() async {
@@ -106,6 +109,7 @@ class _MyappState extends State<Myapp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    late Login user = Login();
     return ValueListenableBuilder<ThemeMode>(
       valueListenable: Myapp.themeNotifier,
       builder: (_, ThemeMode currentMode, __) {
@@ -121,7 +125,73 @@ class _MyappState extends State<Myapp> {
                 ),
                 darkTheme: ThemeData.dark(),
                 themeMode: currentMode,
-                home: const PageOne(),
+                // home: const PageOne(),
+                home: ValueListenableBuilder<bool>(
+                  valueListenable: Myapp.isLogin,
+                  builder: (_, bool login, __) {
+                    return OfflineBuilder(
+                      connectivityBuilder: (
+                        BuildContext context,
+                        ConnectivityResult connectivity,
+                        Widget child,
+                      ) {
+                        bool isConnected =
+                            connectivity != ConnectivityResult.none;
+                        Future.delayed(Duration.zero, () async {
+                          Myapp.connected.value =
+                              connectivity != ConnectivityResult.none;
+                        });
+                        return Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            child,
+                            Positioned(
+                              left: 0,
+                              right: 0,
+                              height: 50,
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 300),
+                                color: isConnected
+                                    ? Colors.transparent
+                                    : Colors.red,
+                                child: isConnected
+                                    ? null
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: const [
+                                          Text(
+                                            "OFFLINE",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          SizedBox(width: 8),
+                                          SizedBox(
+                                            width: 12,
+                                            height: 12,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              valueColor:
+                                                  AlwaysStoppedAnimation(
+                                                Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                      child: login
+                          ? PageProfile(email: user.email)
+                          : PageOne(login: user),
+                    );
+                  },
+                ),
               );
             } else {
               return const Center(

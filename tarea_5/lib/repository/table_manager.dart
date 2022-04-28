@@ -6,7 +6,7 @@ class TableManager {
 
   Future<void> cliente(Database db) async {
     const String table = """CREATE TABLE cliente (
-          dniCl INTEGER PRIMARY KEY AUTOINCREMENT, 
+          dniCl INTEGER PRIMARY KEY, 
           nombreCl TEXT NOT NULL, 
           apellido1 TEXT NOT NULL, 
           apellido2 TEXT, 

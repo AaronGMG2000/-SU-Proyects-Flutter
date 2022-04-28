@@ -23,7 +23,6 @@ class DbManager {
   Future<Database> initDb() async {
     Directory directoryDb = await getApplicationDocumentsDirectory();
     String path = '${directoryDb.path}test.db';
-    databaseFactory.deleteDatabase(path);
     var db = await openDatabase(path, version: 1, onCreate: _onCreate);
     return db;
   }
