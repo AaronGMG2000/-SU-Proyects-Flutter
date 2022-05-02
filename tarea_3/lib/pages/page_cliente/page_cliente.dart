@@ -35,7 +35,7 @@ class _PageClienteState extends State<PageCliente> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState?.save();
       dynamic data = await ApiManager.shared.request(
-          baseUrl: "192.168.1.13:8585",
+          baseUrl: "192.168.1.5:8585",
           pathUrl: "/cliente/guardar",
           type: HttpType.post,
           bodyParams: {
@@ -67,7 +67,7 @@ class _PageClienteState extends State<PageCliente> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState?.save();
       dynamic data = await ApiManager.shared.request(
-          baseUrl: "192.168.1.13:8585",
+          baseUrl: "192.168.1.5:8585",
           pathUrl: "/cliente/actualizar",
           type: HttpType.put,
           bodyParams: {
@@ -94,7 +94,7 @@ class _PageClienteState extends State<PageCliente> {
   Future<int> delete(dynamic dni) async {
     int response = 2;
     dynamic data = await ApiManager.shared.request(
-      baseUrl: "192.168.1.13:8585",
+      baseUrl: "192.168.1.5:8585",
       pathUrl: "/cliente/eliminar/" + dni.toString(),
       type: HttpType.delete,
     );
@@ -130,7 +130,7 @@ class _PageClienteState extends State<PageCliente> {
           )),
       body: FutureBuilder(
         future: ApiManager.shared.request(
-          baseUrl: "192.168.1.13:8585",
+          baseUrl: "192.168.1.5:8585",
           pathUrl: "/cliente/buscar",
           type: HttpType.get,
         ),

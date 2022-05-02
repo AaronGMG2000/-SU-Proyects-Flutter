@@ -23,7 +23,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     on<CloseSession>((event, emit) {
       ApiManager.shared.request(
-        baseUrl: "192.168.0.8:8585",
+        baseUrl: "192.168.1.5:8585",
         pathUrl: "/user/getToken",
         type: HttpType.get,
       );

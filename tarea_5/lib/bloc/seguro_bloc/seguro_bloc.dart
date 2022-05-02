@@ -13,7 +13,7 @@ class SeguroBloc extends Bloc<SeguroEvent, SeguroState> {
       (event, emit) async {
         emit(ProccessLoad());
         dynamic dataSeguro = await ApiManager.shared.request(
-            baseUrl: "192.168.0.8:8585",
+            baseUrl: "192.168.1.5:8585",
             pathUrl: "/seguro/guardar",
             type: HttpType.post,
             bodyParams: {
@@ -45,7 +45,7 @@ class SeguroBloc extends Bloc<SeguroEvent, SeguroState> {
       (event, emit) async {
         emit(ProccessLoad());
         dynamic dataSeguro = await ApiManager.shared.request(
-            baseUrl: "192.168.0.8:8585",
+            baseUrl: "192.168.1.5:8585",
             pathUrl: "/seguro/actualizar",
             type: HttpType.put,
             bodyParams: {
@@ -80,7 +80,7 @@ class SeguroBloc extends Bloc<SeguroEvent, SeguroState> {
     on<DeleteEvent>(
       (event, emit) async {
         await ApiManager.shared.request(
-          baseUrl: "192.168.0.8:8585",
+          baseUrl: "192.168.1.5:8585",
           pathUrl: "/seguro/eliminar/${event.numeroPoliza.toString()}",
           type: HttpType.delete,
         );

@@ -28,7 +28,7 @@ class _PageSiniestroState extends State<PageSiniestro> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState?.save();
       dynamic data = await ApiManager.shared.request(
-          baseUrl: "192.168.1.13:8585",
+          baseUrl: "192.168.1.5:8585",
           pathUrl: "/siniestro/guardar",
           type: HttpType.post,
           bodyParams: {
@@ -61,7 +61,7 @@ class _PageSiniestroState extends State<PageSiniestro> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState?.save();
       dynamic data = await ApiManager.shared.request(
-          baseUrl: "192.168.1.13:8585",
+          baseUrl: "192.168.1.5:8585",
           pathUrl: "/siniestro/actualizar",
           type: HttpType.put,
           bodyParams: {
@@ -88,7 +88,7 @@ class _PageSiniestroState extends State<PageSiniestro> {
   Future<int> delete(dynamic idSiniestro) async {
     int response = 2;
     dynamic data = await ApiManager.shared.request(
-      baseUrl: "192.168.1.13:8585",
+      baseUrl: "192.168.1.5:8585",
       pathUrl: "/siniestro/eliminar/" + idSiniestro.toString(),
       type: HttpType.delete,
     );
@@ -121,7 +121,7 @@ class _PageSiniestroState extends State<PageSiniestro> {
           )),
       body: FutureBuilder(
         future: ApiManager.shared.request(
-          baseUrl: "192.168.1.13:8585",
+          baseUrl: "192.168.1.5:8585",
           pathUrl: "/siniestro/buscar",
           type: HttpType.get,
         ),

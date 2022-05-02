@@ -13,7 +13,7 @@ class ClienteBloc extends Bloc<ClienteEvent, ClienteState> {
       (event, emit) async {
         emit(ProccessLoad());
         dynamic dataSave = await ApiManager.shared.request(
-            baseUrl: "192.168.0.8:8585",
+            baseUrl: "192.168.1.5:8585",
             pathUrl: "/cliente/guardar",
             type: HttpType.post,
             bodyParams: {
@@ -47,7 +47,7 @@ class ClienteBloc extends Bloc<ClienteEvent, ClienteState> {
       (event, emit) async {
         emit(ProccessLoad());
         dynamic dataSave = await ApiManager.shared.request(
-            baseUrl: "192.168.0.8:8585",
+            baseUrl: "192.168.1.5:8585",
             pathUrl: "/cliente/actualizar",
             type: HttpType.put,
             bodyParams: {
@@ -85,7 +85,7 @@ class ClienteBloc extends Bloc<ClienteEvent, ClienteState> {
     on<DeleteClient>(
       (event, emit) async {
         await ApiManager.shared.request(
-          baseUrl: "192.168.0.8:8585",
+          baseUrl: "192.168.1.5:8585",
           pathUrl: "/cliente/eliminar/${event.dni.toString()}",
           type: HttpType.delete,
         );

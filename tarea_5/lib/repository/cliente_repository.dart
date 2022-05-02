@@ -12,7 +12,7 @@ class ClienteRepository extends MasterRepository {
     if (Myapp.connected.value) {
       shared.deleteTable(tablName: 'cliente');
       dynamic dataCliente = await ApiManager.shared.request(
-        baseUrl: "192.168.0.8:8585",
+        baseUrl: "192.168.1.5:8585",
         pathUrl: "/cliente/buscar",
         type: HttpType.get,
       );

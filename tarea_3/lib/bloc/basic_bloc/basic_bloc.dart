@@ -16,7 +16,7 @@ class BasicBloc extends Bloc<BasicEvent, BasicState> {
 
     on<LoginStart>((event, emit) async {
       dynamic data = await ApiManager.shared.request(
-        baseUrl: "192.168.1.13:8585",
+        baseUrl: "192.168.1.5:8585",
         pathUrl: "/user/login",
         type: HttpType.post,
         bodyParams: {

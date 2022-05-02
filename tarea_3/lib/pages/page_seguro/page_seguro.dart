@@ -30,7 +30,7 @@ class _PageSeguroState extends State<PageSeguro> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState?.save();
       dynamic data = await ApiManager.shared.request(
-          baseUrl: "192.168.1.13:8585",
+          baseUrl: "192.168.1.5:8585",
           pathUrl: "/seguro/guardar",
           type: HttpType.post,
           bodyParams: {
@@ -59,7 +59,7 @@ class _PageSeguroState extends State<PageSeguro> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState?.save();
       dynamic data = await ApiManager.shared.request(
-        baseUrl: "192.168.1.13:8585",
+        baseUrl: "192.168.1.5:8585",
         pathUrl: "/seguro/actualizar",
         type: HttpType.put,
         bodyParams: {
@@ -83,7 +83,7 @@ class _PageSeguroState extends State<PageSeguro> {
   Future<int> delete(dynamic numeroPoliza) async {
     int response = 2;
     dynamic data = await ApiManager.shared.request(
-      baseUrl: "192.168.1.13:8585",
+      baseUrl: "192.168.1.5:8585",
       pathUrl: "/seguro/eliminar/" + numeroPoliza.toString(),
       type: HttpType.delete,
     );
@@ -116,7 +116,7 @@ class _PageSeguroState extends State<PageSeguro> {
           )),
       body: FutureBuilder(
         future: ApiManager.shared.request(
-          baseUrl: "192.168.1.13:8585",
+          baseUrl: "192.168.1.5:8585",
           pathUrl: "/seguro/buscar",
           type: HttpType.get,
         ),

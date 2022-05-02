@@ -12,7 +12,7 @@ class LoginRepository extends MasterRepository {
     if (Myapp.connected.value) {
       shared.deleteTable(tablName: 'login');
       dynamic dataLogin = await ApiManager.shared.request(
-        baseUrl: "192.168.0.8:8585",
+        baseUrl: "192.168.1.5:8585",
         pathUrl: "/user/buscar",
         type: HttpType.get,
       );

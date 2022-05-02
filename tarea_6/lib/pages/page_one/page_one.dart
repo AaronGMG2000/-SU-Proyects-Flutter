@@ -26,7 +26,7 @@ class _PageOneState extends State<PageOne> {
     if (isLogin.snapshot.value) {
       dynamic email = await getMode("email");
       dynamic data = await ApiManager.shared.request(
-        baseUrl: "192.168.1.13:8585",
+        baseUrl: "192.168.1.5:8585",
         pathUrl: "/user/login",
         type: HttpType.post,
         bodyParams: {
