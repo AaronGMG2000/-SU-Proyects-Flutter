@@ -16,10 +16,12 @@ jobs:
         with:
           flutter-version: '2.8.0'
           channel: 'stable'
-      - run: cd tarea_8
-      - run: ls
-      - run: flutter pub get
-      - run: flutter test
+      - run: |
+          cd tarea_8 
+          flutter pub get
+      - run: |
+          cd tarea_8 
+          flutter test
       
       
       
