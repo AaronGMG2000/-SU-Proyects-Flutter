@@ -4,7 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 
 Future<String?> getDeviceIdentifier() async {
-  String? deviceIdentifier = "unknown";
+  String? deviceIdentifier = "12345678912345678912345678912345";
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
   if (Platform.isAndroid) {

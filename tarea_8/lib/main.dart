@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -41,6 +42,7 @@ class Myapp extends StatefulWidget {
   static late ValueNotifier<bool> isLogin = ValueNotifier(false);
   static late ValueNotifier<bool> connected = ValueNotifier(false);
   static late bool autenticado = false;
+  static late bool config = false;
 }
 
 class _MyappState extends State<Myapp> {
@@ -123,7 +125,10 @@ class _MyappState extends State<Myapp> {
     });
   }
 
-  Future<void> _biometrico() async {
+  Future<void> _biometrico(context) async {
+    if (Myapp.config) {
+      return;
+    }
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
     bool remember = sharedPreferences.getBool('rememberMe') ?? false;
@@ -184,46 +189,48 @@ class _MyappState extends State<Myapp> {
         }
       } on PlatformException catch (e) {
         if (e.code.toString() == 'LockedOut') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content:
-                    Text(locatizations.dictionary(Strings.lockedOutString))),
-          );
+          Flushbar(
+            message: locatizations.dictionary(Strings.lockedOutString),
+            backgroundColor: Colors.red,
+            duration: const Duration(milliseconds: 1500),
+          ).show(context);
         }
         if (e.code.toString() == 'NotAvailable') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content:
-                    Text(locatizations.dictionary(Strings.notAvailableString))),
-          );
+          Flushbar(
+            message: locatizations.dictionary(Strings.notAvailableString),
+            backgroundColor: Colors.red,
+            duration: const Duration(milliseconds: 1500),
+          ).show(context);
         }
         if (e.code.toString() == 'NotEnrolled') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content:
-                    Text(locatizations.dictionary(Strings.notEnrolledString))),
-          );
+          Flushbar(
+            message: locatizations.dictionary(Strings.notEnrolledString),
+            backgroundColor: Colors.red,
+            duration: const Duration(milliseconds: 1500),
+          ).show(context);
         }
         if (e.code.toString() == 'OtherOperatingSystem') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(locatizations
-                    .dictionary(Strings.otherOperatingSystemString))),
-          );
+          Flushbar(
+            message:
+                locatizations.dictionary(Strings.otherOperatingSystemString),
+            backgroundColor: Colors.red,
+            duration: const Duration(milliseconds: 1500),
+          ).show(context);
         }
         if (e.code.toString() == 'PasscodeNotSet') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(
-                    locatizations.dictionary(Strings.passcodeNotSetString))),
-          );
+          Flushbar(
+            message: locatizations.dictionary(Strings.passcodeNotSetString),
+            backgroundColor: Colors.red,
+            duration: const Duration(milliseconds: 1500),
+          ).show(context);
         }
         if (e.code.toString() == 'PermanentlyLockedOut') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(locatizations
-                    .dictionary(Strings.permanentlyLockedOutString))),
-          );
+          Flushbar(
+            message:
+                locatizations.dictionary(Strings.permanentlyLockedOutString),
+            backgroundColor: Colors.red,
+            duration: const Duration(milliseconds: 1500),
+          ).show(context);
         }
       } catch (e) {
         print(e);
@@ -301,7 +308,7 @@ class _MyappState extends State<Myapp> {
                               Future.delayed(const Duration(microseconds: 500),
                                   () async {
                                 if (!Myapp.isLogin.value) {
-                                  _biometrico();
+                                  _biometrico(context);
                                 }
                               });
                               return Stack(

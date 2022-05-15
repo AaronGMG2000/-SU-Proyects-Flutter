@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tarea_2/util/app_type.dart';
+import 'package:crypto/crypto.dart';
 
 Future<Map<String, dynamic>> getDeviceIdentifier() async {
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -40,6 +42,12 @@ Future<Map<String, dynamic>> getDeviceIdentifier() async {
     LinuxDeviceInfo linuxInfo = await deviceInfo.linuxInfo;
     deviceInfoMap = {
       'machineId': linuxInfo.machineId,
+    };
+  } else if (Platform.isWindows) {
+    WindowsDeviceInfo windowsInfo = await deviceInfo.windowsInfo;
+    deviceInfoMap = {
+      'deviceId': sha256.convert(utf8.encode(windowsInfo.computerName)),
+      'deviceName': windowsInfo.computerName,
     };
   }
   return deviceInfoMap;
@@ -95,7 +103,10 @@ Future<Map<String, dynamic>> getGeolocation(
     HttpType type,
     int statusCode) async {
   Map<String, dynamic> deviceInfo = await getDeviceIdentifier();
-  Map<String, dynamic> location = await getCurrentLocation();
+  Map<String, dynamic> location = {};
+  try {
+    location = await getCurrentLocation();
+  } catch (e) {}
   Map<String, dynamic> response = {
     'deviceInfo': deviceInfo,
     'location': location,

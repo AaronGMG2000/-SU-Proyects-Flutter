@@ -152,7 +152,18 @@ class _PageOneState extends State<PageOne> {
                                       color: Myapp.themeNotifier.value ==
                                               ThemeMode.light
                                           ? Colors.white
-                                          : const Color.fromRGBO(29, 29, 29, 1),
+                                          : Myapp.themeNotifier.value ==
+                                                  ThemeMode.system
+                                              ? SchedulerBinding
+                                                          .instance!
+                                                          .window
+                                                          .platformBrightness ==
+                                                      Brightness.light
+                                                  ? Colors.white
+                                                  : const Color.fromRGBO(
+                                                      29, 29, 29, 1)
+                                              : const Color.fromRGBO(
+                                                  29, 29, 29, 1),
                                       borderRadius: const BorderRadius.only(
                                         topLeft: Radius.circular(50),
                                         topRight: Radius.circular(50),

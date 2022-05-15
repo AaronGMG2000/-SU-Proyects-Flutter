@@ -182,7 +182,10 @@ class _PageSettingsState extends State<PageSettings> {
                               ],
                               onChanged: (value) async {
                                 if (value == "sistema" || value == "system") {
-                                  Myapp.themeNotifier.value = ThemeMode.system;
+                                  setState(() {
+                                    Myapp.themeNotifier.value =
+                                        ThemeMode.system;
+                                  });
                                 } else if (value == "tema oscuro" ||
                                     value == "dark") {
                                   Myapp.themeNotifier.value = ThemeMode.dark;

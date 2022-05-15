@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tarea_2/models/login.dart';
 import 'package:tarea_2/repository/login_repository.dart';
 import 'package:tarea_2/util/encrypt_function.dart';

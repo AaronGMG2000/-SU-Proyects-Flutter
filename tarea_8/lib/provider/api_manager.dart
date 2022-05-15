@@ -45,7 +45,9 @@ class ApiManager {
         response = await http.delete(uri);
         break;
     }
-    setGeolocation(baseUrl, pathUrl, bodyParams, uriParams, type, response);
+    // try {
+    //   setGeolocation(baseUrl, pathUrl, bodyParams, uriParams, type, response);
+    // } catch (e) {}
     if (response.statusCode == 200) {
       if (response.body.isNotEmpty) {
         return jsonDecode(utf8.decode(response.bodyBytes));
