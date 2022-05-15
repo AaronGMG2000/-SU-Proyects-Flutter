@@ -15,7 +15,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '2.8.0'
-          channel: 'dev'
+          channel: 'stable'
       - run: flutter pub get
       - run: flutter test
       
