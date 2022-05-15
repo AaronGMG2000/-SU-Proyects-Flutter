@@ -17,6 +17,7 @@ jobs:
           flutter-version: '2.8.0'
           channel: 'stable'
       - run: cd tarea_8
+      - run: ls
       - run: flutter pub get
       - run: flutter test
       
