@@ -18,10 +18,13 @@ class ApiManager {
     Map<String, dynamic>? bodyParams = const {},
     Map<String, dynamic>? uriParams = const {},
   }) async {
-    final uri = Uri.http(baseUrl, pathUrl);
+    final uri = Uri.http(baseUrl, pathUrl, uriParams);
     dynamic response;
     dynamic headers = {
       'Content-Type': 'application/json',
+      'Accept': '*/*',
+      'Accept-Encoding': 'gzip, deflate',
+      'Connection': 'keep-alive',
     };
     switch (type) {
       case HttpType.get:

@@ -10,14 +10,15 @@ import 'package:tarea_2/util/geolocation.dart' as geo;
 import 'package:tarea_2/util/validations.dart';
 
 void main() {
+  late String id = "";
   group('encrypt decrypt', () {
     test('encrypt', () async {
       final String encrypt = await encryptText("texto");
-      expect(encrypt, "bFOhUPnTe4aMVef4TKX5/A==");
+      expect(encrypt, "QkUQAzFWwMagJsv6joY/Tg==");
     });
 
     test('decrypt', () async {
-      final String deencrypt = await deencryptText("bFOhUPnTe4aMVef4TKX5/A==");
+      final String deencrypt = await deencryptText("QkUQAzFWwMagJsv6joY/Tg==");
       expect(deencrypt, "texto");
     });
   });
@@ -72,59 +73,12 @@ void main() {
   group("ApiManager test", () {
     test("get", () async {
       final dynamic response = await ApiManager.shared.request(
-        baseUrl: "192.168.1.4:8585",
-        pathUrl: "/cliente/buscar/",
+        baseUrl: "api.tvmaze.com",
+        pathUrl: "/search/shows",
+        uriParams: {
+          "q": "rick and morty",
+        },
         type: HttpType.get,
-      );
-      expect(response, isNotNull);
-    });
-
-    test("post", () async {
-      final dynamic response = await ApiManager.shared.request(
-          baseUrl: "192.168.1.4:8585",
-          pathUrl: "/cliente/guardar",
-          type: HttpType.post,
-          bodyParams: {
-            'nombreCl': "Aaron",
-            'apellido1': "Marroquin",
-            'apellido2': "Garcia",
-            'telefono': "44444444",
-            'ciudad': "Chimaltenango",
-            'claseVia': "Via 1",
-            'numeroVia': "1",
-            'codPostal': "4003",
-            'nombreVia': "Via",
-            'observaciones': "Ninguna",
-          });
-      expect(response, isNotNull);
-    });
-
-    test("put", () async {
-      final dynamic response = await ApiManager.shared.request(
-          baseUrl: "192.168.1.4:8585",
-          pathUrl: "/cliente/actualizar",
-          type: HttpType.put,
-          bodyParams: {
-            'dniCl': "154",
-            'nombreCl': "Aaron",
-            'apellido1': "Marroquin",
-            'apellido2': "Garcia",
-            'telefono': "44444444",
-            'ciudad': "Chimaltenango",
-            'claseVia': "Via 1",
-            'numeroVia': "1",
-            'codPostal': "4003",
-            'nombreVia': "Via",
-            'observaciones': "Ninguna",
-          });
-      expect(response, isNotNull);
-    });
-
-    test("delete", () async {
-      final dynamic response = await ApiManager.shared.request(
-        baseUrl: "192.168.1.4:8585",
-        pathUrl: "/cliente/eliminar/155",
-        type: HttpType.delete,
       );
       expect(response, isNotNull);
     });
