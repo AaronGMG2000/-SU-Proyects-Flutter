@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:tarea_2/bloc/basic_bloc/basic_bloc.dart';
 import 'package:tarea_2/localizations/localizations.dart';
 import 'package:tarea_2/main.dart';
-import 'package:tarea_2/models/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tarea_2/provider/language_provider.dart';

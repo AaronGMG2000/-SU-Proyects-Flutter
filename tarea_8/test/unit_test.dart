@@ -10,7 +10,6 @@ import 'package:tarea_2/util/geolocation.dart' as geo;
 import 'package:tarea_2/util/validations.dart';
 
 void main() {
-  late String id = "";
   group('encrypt decrypt', () {
     test('encrypt', () async {
       final String encrypt = await encryptText("texto");
