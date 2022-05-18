@@ -24,7 +24,7 @@ class _PageEditableView extends State<PageEditableView> {
           backgroundColor: Myapp.themeNotifier.value == ThemeMode.light
               ? Colors.blue
               : Myapp.themeNotifier.value == ThemeMode.system
-                  ? SchedulerBinding.instance!.window.platformBrightness ==
+                  ? SchedulerBinding.instance.window.platformBrightness ==
                           Brightness.light
                       ? Colors.blue
                       : const Color.fromRGBO(17, 17, 17, 1)
@@ -74,7 +74,7 @@ class _PageEditableView extends State<PageEditableView> {
                             color: Myapp.themeNotifier.value == ThemeMode.light
                                 ? Colors.white
                                 : Myapp.themeNotifier.value == ThemeMode.system
-                                    ? SchedulerBinding.instance!.window
+                                    ? SchedulerBinding.instance.window
                                                 .platformBrightness ==
                                             Brightness.light
                                         ? Colors.white

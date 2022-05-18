@@ -30,7 +30,7 @@ class PageProfile extends StatelessWidget {
           backgroundColor: Myapp.themeNotifier.value == ThemeMode.light
               ? Colors.blue
               : Myapp.themeNotifier.value == ThemeMode.system
-                  ? SchedulerBinding.instance!.window.platformBrightness ==
+                  ? SchedulerBinding.instance.window.platformBrightness ==
                           Brightness.light
                       ? Colors.blue
                       : const Color.fromRGBO(17, 17, 17, 1)

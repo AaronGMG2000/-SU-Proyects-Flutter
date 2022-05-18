@@ -39,7 +39,7 @@ class _PageSettingsState extends State<PageSettings> {
             backgroundColor: Myapp.themeNotifier.value == ThemeMode.light
                 ? Colors.blue
                 : Myapp.themeNotifier.value == ThemeMode.system
-                    ? SchedulerBinding.instance!.window.platformBrightness ==
+                    ? SchedulerBinding.instance.window.platformBrightness ==
                             Brightness.light
                         ? Colors.blue
                         : const Color.fromRGBO(17, 17, 17, 1)
@@ -49,7 +49,7 @@ class _PageSettingsState extends State<PageSettings> {
           backgroundColor: Myapp.themeNotifier.value == ThemeMode.light
               ? Colors.blue
               : Myapp.themeNotifier.value == ThemeMode.system
-                  ? SchedulerBinding.instance!.window.platformBrightness ==
+                  ? SchedulerBinding.instance.window.platformBrightness ==
                           Brightness.light
                       ? Colors.blue
                       : const Color.fromRGBO(17, 17, 17, 1)
@@ -95,7 +95,7 @@ class _PageSettingsState extends State<PageSettings> {
                         ? Colors.white
                         : Myapp.themeNotifier.value == ThemeMode.system
                             ? SchedulerBinding
-                                        .instance!.window.platformBrightness ==
+                                        .instance.window.platformBrightness ==
                                     Brightness.light
                                 ? Colors.white
                                 : const Color.fromRGBO(29, 29, 29, 1)
@@ -193,7 +193,7 @@ class _PageSettingsState extends State<PageSettings> {
                                   Myapp.themeNotifier.value = ThemeMode.light;
                                 }
                                 print(SchedulerBinding
-                                    .instance!.window.platformBrightness);
+                                    .instance.window.platformBrightness);
                                 setMode(value, 'mode');
                               },
                             ),

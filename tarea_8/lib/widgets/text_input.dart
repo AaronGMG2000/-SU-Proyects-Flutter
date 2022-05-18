@@ -51,7 +51,7 @@ class _TextInputState extends State<TextInputT> {
           Color color = Myapp.themeNotifier.value == ThemeMode.light
               ? const Color.fromRGBO(232, 232, 232, 1)
               : Myapp.themeNotifier.value == ThemeMode.system
-                  ? SchedulerBinding.instance!.window.platformBrightness ==
+                  ? SchedulerBinding.instance.window.platformBrightness ==
                           Brightness.light
                       ? const Color.fromRGBO(232, 232, 232, 1)
                       : const Color.fromRGBO(80, 80, 80, 1)
@@ -78,8 +78,7 @@ class _TextInputState extends State<TextInputT> {
                 color: Myapp.themeNotifier.value == ThemeMode.light
                     ? const Color.fromRGBO(76, 76, 76, 1)
                     : Myapp.themeNotifier.value == ThemeMode.system
-                        ? SchedulerBinding
-                                    .instance!.window.platformBrightness ==
+                        ? SchedulerBinding.instance.window.platformBrightness ==
                                 Brightness.light
                             ? const Color.fromRGBO(76, 76, 76, 1)
                             : const Color.fromRGBO(253, 253, 253, 1)
@@ -102,7 +101,7 @@ class _TextInputState extends State<TextInputT> {
                                   ? const Color.fromRGBO(76, 76, 76, 1)
                                   : Myapp.themeNotifier.value ==
                                           ThemeMode.system
-                                      ? SchedulerBinding.instance!.window
+                                      ? SchedulerBinding.instance.window
                                                   .platformBrightness ==
                                               Brightness.light
                                           ? const Color.fromRGBO(76, 76, 76, 1)

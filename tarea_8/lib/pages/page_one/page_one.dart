@@ -41,7 +41,7 @@ class _PageOneState extends State<PageOne> {
             backgroundColor: Myapp.themeNotifier.value == ThemeMode.light
                 ? Colors.blue
                 : Myapp.themeNotifier.value == ThemeMode.system
-                    ? SchedulerBinding.instance!.window.platformBrightness ==
+                    ? SchedulerBinding.instance.window.platformBrightness ==
                             Brightness.light
                         ? Colors.blue
                         : const Color.fromRGBO(17, 17, 17, 1)
@@ -154,9 +154,7 @@ class _PageOneState extends State<PageOne> {
                                           ? Colors.white
                                           : Myapp.themeNotifier.value ==
                                                   ThemeMode.system
-                                              ? SchedulerBinding
-                                                          .instance!
-                                                          .window
+                                              ? SchedulerBinding.instance.window
                                                           .platformBrightness ==
                                                       Brightness.light
                                                   ? Colors.white

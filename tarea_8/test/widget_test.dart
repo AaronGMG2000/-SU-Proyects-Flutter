@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+import 'package:tarea_2/localizations/localizations.dart';
 import 'package:tarea_2/models/Seguro.dart';
 import 'package:tarea_2/models/cliente.dart';
 import 'package:tarea_2/models/login.dart';
@@ -10,12 +12,10 @@ import 'package:tarea_2/pages/page_profile/page_profile.dart';
 import 'package:tarea_2/pages/page_register_client/page_register_client.dart';
 import 'package:tarea_2/pages/page_register_seguro/page_register_seguro.dart';
 import 'package:tarea_2/pages/page_register_siniestro/page_register_siniestro.dart';
-import 'package:tarea_2/pages/page_settings/page_settings.dart';
 import 'package:tarea_2/pages/page_two/page_two.dart';
-import 'package:tarea_2/repository/app_preferences.dart';
+import 'package:tarea_2/provider/language_provider.dart';
 import 'package:tarea_2/widgets/button_model1.dart';
 import 'package:tarea_2/widgets/button_model2.dart';
-import 'package:tarea_2/widgets/dropdownbutton1.dart';
 import 'package:tarea_2/widgets/form_client_validation.dart';
 import 'package:tarea_2/widgets/form_seguro_validation.dart';
 import 'package:tarea_2/widgets/form_siniestro_validation.dart';
@@ -48,7 +48,7 @@ main() {
         expect(find.byIcon(Icons.abc_outlined), findsNothing);
       },
     );
-
+//
     testWidgets(
       "Perfil",
       (WidgetTester tester) async {
@@ -316,21 +316,44 @@ main() {
   testWidgets(
     "form_validation",
     (WidgetTester tester) async {
+      LanguageProvider().setLanguage =
+          await LanguageProvider().getDefaultLanguage();
       final _formKey = GlobalKey<FormState>();
       await tester.pumpWidget(
-        MaterialApp(
-          locale: const Locale("es", "ES"),
-          home: Scaffold(
-            body: FormValidation(
-              formKey: _formKey,
-              login: Login(),
-              onSubmit: () {},
-            ),
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => LanguageProvider()),
+          ],
+          child: Consumer(
+            builder: (context, LanguageProvider languageProvider, widget) {
+              return MaterialApp(
+                locale: languageProvider.getLang,
+                localizationsDelegates: const [
+                  AppLocalizationsDelegate(),
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                home: Scaffold(
+                  body: FormValidation(
+                    formKey: _formKey,
+                    login: Login(),
+                    onSubmit: () {
+                      _formKey.currentState!.validate();
+                    },
+                  ),
+                ),
+              );
+            },
           ),
         ),
       );
       await tester.pump();
       expect(find.byType(FormValidation), findsOneWidget);
+      expect(find.byType(ButtonModel1), findsOneWidget);
+      await tester.tap(find.byType(ButtonModel1));
+      await tester.pump();
+      expect(find.text("Please enter an email"), findsOneWidget);
     },
   );
 
